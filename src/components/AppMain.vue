@@ -1,39 +1,53 @@
 <template lang="">
-    <div class="container">
-        <div class="row">
-            <ul class="col-3 mb-5 list-group-numbered" v-for = "title in titleList">
-                <li> {{ title.title}}</li>
-                <li>{{ title.original_title }}</li>
-                <li>{{ title.original_language}}</li>
-                <li>{{ title.vote_average}}</li>
-            </ul>    
-        </div>
-    </div>
-
     
-   
+    <SearchBar  @searched="resultMovies" />
+    <MoviesList :titleList="titleList" />
+
 </template>
 <script>
 import axios from 'axios';
-
+import SearchBar from './SearchBar.vue';
+import MoviesList from './MoviesList.vue';
 export default {
     name: 'AppMain',
-    titleList : [],
+    components:{
+       SearchBar,
+       MoviesList,
+    },
+    
+    
 
     data() {
         return {
-            apiUrl : 'https://api.themoviedb.org/3/discover/movie?api_key=5c7e4b34b42dc8001eec6169d917c0ca',
+            apiUrl : 'https://api.themoviedb.org/3/search/movie?api_key=5c7e4b34b42dc8001eec6169d917c0ca&',
+            titleList : [],
         }
     },  
 
-    created() {
-        axios.get(this.apiUrl)
-        .then((response) => {
+    methods: {
+        resultMovies(message){
+            
+
+            axios.get(this.apiUrl,{
+                params:{
+                    query: message
+                }
+            })
+            .then((response) => {
             this.titleList = response.data.results
-            console.log(this.titleList)
+            console.log(response.data.results[0].original_title)
+            
+            
+            
         })
+
     },
 
+    created() {
+      
+    },
+
+    }
 }
 </script>
 <style lang="scss" scoped>
