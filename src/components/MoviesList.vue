@@ -1,11 +1,10 @@
 <template>
       <div class="container">
         <div class="row">
-            <ul class="col-3 mb-5 list-group-numbered" v-for = "title in titleList">
+            <ul class="col-3 mb-5 list-group-numbered" v-for = "title in completeList">
                 <img src="" alt="">
-                <li> {{ title.title }}</li>
-                <li>{{ title.original_title }}</li>
-<!-- "getImagePath(`'../assets/img/' + '${title.original_language}' + 'png'`)" -->
+                <li> {{ title.title ? title.title : title.name }}</li>
+                <li>{{ title.original_title ? title.original_title : title.original_name }}</li>
                 <li>
                <img  v-if="nationsList.includes(`${title.original_language}`)" :src="getImagePath(`../assets/img/` + `${title.original_language}` + `.png`)"> 
                <p v-else>{{ title.original_language }}</p>
@@ -23,19 +22,25 @@
 export default {
     name:'MoviesList',
     props :{
-        titleList : Array,
+        movieList : Array,
+        tvList : Array,
     },
     data() {
         return {
             nationsList:['it','en','ja','de','es','fr'],
+            completeList: this.movieList.concat(this.tvList)
         }
     },
     methods:{
        getImagePath : function (imgPath) {
             return new URL(imgPath, import.meta.url).href;
+    },
+    },
+
+    created(){
+        
+    },
     
-    }
-    }
 }
 </script>
 <style lang="scss" >

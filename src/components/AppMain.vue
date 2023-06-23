@@ -1,7 +1,7 @@
 <template lang="">
     
-    <SearchBar  @searched="resultMovies" />
-    <MoviesList :titleList="titleList" /> 
+    <SearchBar  @searched="completeSearch" />
+    <MoviesList :movieList="movieList" :tvList="tvList" /> 
 
 </template>
 <script>
@@ -22,6 +22,8 @@ export default {
             apiMoviesUrl : 'https://api.themoviedb.org/3/search/movie?api_key=5c7e4b34b42dc8001eec6169d917c0ca&',
             apiTvUrl : 'https://api.themoviedb.org/3/search/tv?api_key=5c7e4b34b42dc8001eec6169d917c0ca',
             titleList : [],
+            tvList : [],
+            movieList:[],
         }
     },  
 
@@ -35,26 +37,28 @@ export default {
                 }
             })
             .then((response) => {
-            this.titleList = response.data.results
+           this.movieList=( response.data.results ) 
             
             })
 
-            axios.get(this.apiMoviesUrl,{
-                params:{
-                    query: message
-                }
-            })
-            .then((response) => {
-            this.titleList = response.data.results
-            console.log(response.data.results)
-            })
-
+            
+        },
+        resultTv(message){
+        axios.get(this.apiTvUrl,{
+            params:{
+                query: message
+            }
+        })
+        .then((response) => {
+       this.tvList = (response.data.results) 
+       
+        })
     },
 
-    created() {
-      
-    },
-
+    completeSearch(message){
+        this.resultMovies(message);
+        this.resultTv(message);
+    }
     }
 }
 </script>
